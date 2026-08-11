@@ -1,11 +1,11 @@
 # Translator
 
-**AI translation that also teaches you the language — a cartridge for [Mnemosyne OS](https://github.com/yaka0007/Mnemosyne-Neural-OS).**
+**AI translation that also teaches you the language — a cartridge for [Mnemosyne OS](https://github.com/Mnemosyne-OS/Mnemosyne-Neural-OS).**
 
 > [!IMPORTANT]
 > **Translator is a cartridge — it runs inside Mnemosyne OS.** Install the host app first, then load this cartridge from MnemoHub (or link it in dev mode).
 >
-> [![Download latest release](https://img.shields.io/badge/⬇%20Download-Mnemosyne%20OS%20latest-0ea5e9?style=for-the-badge)](https://github.com/yaka0007/Mnemosyne-Neural-OS/releases/latest) &nbsp; [![Mnemosyne OS repository](https://img.shields.io/badge/GitHub-Mnemosyne%20OS-181717?style=for-the-badge&logo=github)](https://github.com/yaka0007/Mnemosyne-Neural-OS)
+> [![Download latest release](https://img.shields.io/badge/⬇%20Download-Mnemosyne%20OS%20latest-0ea5e9?style=for-the-badge)](https://github.com/Mnemosyne-OS/Mnemosyne-Neural-OS/releases/latest) &nbsp; [![Mnemosyne OS repository](https://img.shields.io/badge/GitHub-Mnemosyne%20OS-181717?style=for-the-badge&logo=github)](https://github.com/Mnemosyne-OS/Mnemosyne-Neural-OS)
 
 Translate a phrase, a paragraph, or a whole document with **your own AI engine** — local or cloud — so nothing leaves your machine unless you choose a cloud model. Then turn what you just read into vocabulary you actually remember.
 
@@ -76,8 +76,13 @@ The cartridge is a plain Vite + React app. Inside Mnemosyne OS it is served thro
 | `vault:write` | keep translations and learned words in the app's own sandbox vault |
 | `vault:read` | read that sandbox back |
 
-See the [Mnemosyne OS handbook](https://github.com/yaka0007/Mnemosyne-Neural-OS) for the cartridge SDK.
+See the [Mnemosyne OS handbook](https://github.com/Mnemosyne-OS/Mnemosyne-Neural-OS) for the cartridge SDK.
 
 ## License
 
 [MIT](LICENSE)
+
+---
+
+<sub>**[Mnemosyne OS](https://mnemosyne-os.io)** — the sovereign, local-first memory OS this cartridge runs in.
+Get it at [mnemosyne-os.io/download](https://mnemosyne-os.io/download), install cartridges from the built-in MnemoHub store, or [build your own](https://mnemosyne-os.io/dev).</sub>
