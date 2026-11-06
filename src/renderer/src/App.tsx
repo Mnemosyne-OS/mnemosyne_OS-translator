@@ -57,11 +57,27 @@ export default function App() {
     }
   };
 
-  // Inherit theme from the host shell.
+  // Inherit the theme from the host shell. The host broadcasts
+  // MNEMO_CONFIG_UPDATE (the MNEMO_THEME_SYNC this used to wait for was never
+  // sent). This app does not depend on @mnemosyne_os/cartridge-sdk, so this is
+  // a copy of its onHostConfig(): same parent-only guard, data-theme on <html>,
+  // and every host colour token inline on <html>, which beats the :root
+  // values of globals.css for the names the two share.
   useEffect(() => {
+    // The host puts its ground in the URL too: take it at once, so a light
+    // host does not get a dark flash before its first broadcast.
+    const initial = new URLSearchParams(window.location.search).get('theme');
+    if (initial === 'dark' || initial === 'light') document.documentElement.setAttribute('data-theme', initial);
     const handler = (e: MessageEvent) => {
-      if (e.data?.type === 'MNEMO_THEME_SYNC') {
-        document.documentElement.setAttribute('data-theme', e.data.theme);
+      if (e.source !== window.parent) return;
+      const d = e.data;
+      if (d?.type !== 'MNEMO_CONFIG_UPDATE') return;
+      const root = document.documentElement;
+      if (d.theme === 'dark' || d.theme === 'light') root.setAttribute('data-theme', d.theme);
+      if (d.tokens && typeof d.tokens === 'object') {
+        for (const [key, value] of Object.entries(d.tokens as Record<string, unknown>)) {
+          if (key.startsWith('--') && typeof value === 'string') root.style.setProperty(key, value);
+        }
       }
     };
     window.addEventListener('message', handler);
