@@ -1,13 +1,14 @@
 /**
- * RepertoireTab — the learned-word glossary (BETA).
- * Searchable, filterable by language pair; launches the spaced-repetition
- * review over the cards that are currently due (or all, if none are due yet).
+ * RepertoireTab — the learned-word glossary (BETA): searchable, filterable by
+ * language pair, and the door to the spaced-repetition review over the cards
+ * due now (or all of them when none is due yet).
  */
 import { useMemo, useState } from 'react';
-import { dueEntries, langName, MAX_BOX, type VocabEntry } from '../lib/store';
-import { Beta } from './Beta';
+import { langLabel, t, tc } from '../i18n';
+import { dueEntries, MAX_BOX, type VocabEntry } from '../lib/store';
+import { Beta, Empty } from './Bits';
+import { Icon } from './icons';
 import { ReviewMode } from './ReviewMode';
-import { actionBtn, cardStyle, inputStyle, primaryBtn } from '../lib/ui';
 
 interface Props {
   vocab: VocabEntry[];
@@ -24,7 +25,7 @@ export function RepertoireTab({ vocab, grade, remove }: Props) {
     const set = new Map<string, string>();
     for (const e of vocab) {
       const key = `${e.sourceLang}>${e.targetLang}`;
-      if (!set.has(key)) set.set(key, `${langName(e.sourceLang)} → ${langName(e.targetLang)}`);
+      if (!set.has(key)) set.set(key, `${langLabel(e.sourceLang)} → ${langLabel(e.targetLang)}`);
     }
     return Array.from(set.entries());
   }, [vocab]);
@@ -33,151 +34,72 @@ export function RepertoireTab({ vocab, grade, remove }: Props) {
     const q = search.trim().toLowerCase();
     return vocab
       .filter((e) => pair === 'all' || `${e.sourceLang}>${e.targetLang}` === pair)
-      .filter(
-        (e) =>
-          !q ||
-          e.sourceTerm.toLowerCase().includes(q) ||
-          e.targetTerm.toLowerCase().includes(q) ||
-          (e.note?.toLowerCase().includes(q) ?? false),
-      )
+      .filter((e) => !q || e.sourceTerm.toLowerCase().includes(q) || e.targetTerm.toLowerCase().includes(q) || (e.note?.toLowerCase().includes(q) ?? false))
       .sort((a, b) => b.at - a.at);
   }, [vocab, search, pair]);
 
   const dueCount = useMemo(() => dueEntries(vocab, Date.now()).length, [vocab]);
 
   const startReview = () => {
-    const now = Date.now();
     const scope = filtered.length > 0 ? filtered : vocab;
-    const due = dueEntries(scope, now);
-    // If nothing is due yet, let the learner drill the whole (filtered) set.
+    const due = dueEntries(scope, Date.now());
     setReviewQueue(due.length > 0 ? due : [...scope].sort((a, b) => a.due - b.due));
   };
 
-  if (reviewQueue) {
-    return <ReviewMode queue={reviewQueue} grade={grade} onExit={() => setReviewQueue(null)} />;
-  }
+  if (reviewQueue) return <ReviewMode queue={reviewQueue} grade={grade} onExit={() => setReviewQueue(null)} />;
 
   if (vocab.length === 0) {
     return (
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 10,
-          padding: 24,
-          textAlign: 'center',
-          color: 'var(--text-muted)',
-        }}
-      >
-        <div style={{ fontSize: 32 }}>📖</div>
-        <div style={{ fontSize: 14, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 8 }}>
-          Your repertoire is empty <Beta />
-        </div>
-        <div style={{ fontSize: 12, maxWidth: 320 }}>
-          Translate something, then press <strong>Extract vocabulary</strong> to collect the words
-          worth learning. They land here for review.
-        </div>
+      <div className="pad" style={{ flex: 1 }}>
+        <Empty title={t('vocab.emptyTitle')}>
+          <span style={{ fontSize: 12 }}>{t('vocab.emptyHint')}</span>
+          <Beta />
+        </Empty>
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
-      {/* Toolbar */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          padding: '10px 14px',
-          borderBottom: '1px solid var(--border-subtle)',
-          background: 'var(--bg-panel)',
-          flexWrap: 'wrap',
-        }}
-      >
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search words…"
-          style={{ ...inputStyle, flex: 1, minWidth: 120 }}
-        />
+    <div className="pad" style={{ flex: 1 }}>
+      <div className="row">
+        <input className="grow" value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t('vocab.search')} aria-label={t('vocab.search')} />
         {pairs.length > 1 && (
-          <select value={pair} onChange={(e) => setPair(e.target.value)} style={inputStyle}>
-            <option value="all">All pairs</option>
-            {pairs.map(([key, label]) => (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            ))}
+          <select value={pair} onChange={(e) => setPair(e.target.value)} aria-label={t('vocab.pairs')}>
+            <option value="all">{t('vocab.allPairs')}</option>
+            {pairs.map(([key, label]) => <option key={key} value={key}>{label}</option>)}
           </select>
         )}
-        <button
-          onClick={startReview}
-          style={{ ...primaryBtn, padding: '6px 14px', display: 'flex', alignItems: 'center', gap: 6 }}
-        >
-          🎯 Review{dueCount > 0 ? ` (${dueCount})` : ''} <Beta />
+        <button type="button" className="primary" onClick={startReview}>
+          {t('vocab.review')}{dueCount > 0 ? ` (${dueCount})` : ''} <Beta />
         </button>
       </div>
-
-      {/* Count line */}
-      <div style={{ padding: '6px 14px', fontSize: 10, color: 'var(--text-muted)' }}>
-        {filtered.length} of {vocab.length} word{vocab.length === 1 ? '' : 's'}
-        {dueCount > 0 ? ` · ${dueCount} due for review` : ' · all reviewed for now'}
-      </div>
-
-      {/* List */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 14px 14px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <span className="lab">
+        {tc('vocab.count', vocab.length, { shown: filtered.length })} · {dueCount > 0 ? tc('vocab.due', dueCount) : t('vocab.allReviewed')}
+      </span>
+      <div className="grid">
         {filtered.map((e) => (
-          <div key={e.id} style={cardStyle}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-              <span style={{ fontSize: 14, fontWeight: 500 }}>{e.sourceTerm}</span>
-              <span style={{ color: 'var(--text-muted)' }}>→</span>
-              <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{e.targetTerm}</span>
-              {e.pos && (
-                <span style={{ fontSize: 10, fontStyle: 'italic', color: 'var(--text-muted)' }}>{e.pos}</span>
-              )}
-              <span
-                title={`Leitner box ${e.box}/${MAX_BOX} — reviews: ${e.reviews}, lapses: ${e.lapses}`}
-                style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-muted)', letterSpacing: 1 }}
-              >
-                {'●'.repeat(e.box)}
-                {'○'.repeat(Math.max(0, MAX_BOX - e.box))}
+          <div key={e.id} className="hud card">
+            <div className="row">
+              <span style={{ fontSize: 15, fontWeight: 500 }}>{e.sourceTerm}</span>
+              <span className="muted">→</span>
+              <span style={{ fontSize: 15 }} className="holo">{e.targetTerm}</span>
+              {e.pos && <span className="muted" style={{ fontSize: 11, fontStyle: 'italic' }}>{e.pos}</span>}
+              <span className="mono muted" style={{ marginLeft: 'auto', fontSize: 10, letterSpacing: 1 }} title={t('vocab.boxTitle', { box: e.box, max: MAX_BOX, reviews: e.reviews, lapses: e.lapses })}>
+                {'●'.repeat(e.box)}{'○'.repeat(Math.max(0, MAX_BOX - e.box))}
               </span>
-              <button
-                onClick={() => remove(e.id)}
-                title="Remove from repertoire"
-                style={{ ...actionBtn, padding: '1px 6px', color: 'var(--text-muted)' }}
-              >
-                ✕
-              </button>
+              <button type="button" className="icon flat" onClick={() => remove(e.id)} title={t('action.remove')} aria-label={t('action.remove')}><Icon.close /></button>
             </div>
             {e.example && (
-              <div style={{ marginTop: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
-                “{e.example}”
-                {e.exampleTranslation && (
-                  <span style={{ color: 'var(--text-muted)' }}> — “{e.exampleTranslation}”</span>
-                )}
-              </div>
+              <span className="muted" style={{ fontSize: 12 }}>
+                “{e.example}”{e.exampleTranslation && <> — “{e.exampleTranslation}”</>}
+              </span>
             )}
-            {e.note && (
-              <div style={{ marginTop: 3, fontSize: 11, color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                {e.note}
-              </div>
-            )}
-            <div style={{ marginTop: 4, fontSize: 9, color: 'var(--text-muted)' }}>
-              {langName(e.sourceLang)} → {langName(e.targetLang)}
-            </div>
+            {e.note && <span className="muted" style={{ fontSize: 11, fontStyle: 'italic' }}>{e.note}</span>}
+            <span className="lab">{langLabel(e.sourceLang)} → {langLabel(e.targetLang)}</span>
           </div>
         ))}
-        {filtered.length === 0 && (
-          <div style={{ padding: 20, textAlign: 'center', fontSize: 12, color: 'var(--text-muted)' }}>
-            No words match your search.
-          </div>
-        )}
       </div>
+      {filtered.length === 0 && <Empty title={t('vocab.noMatch')} />}
     </div>
   );
 }

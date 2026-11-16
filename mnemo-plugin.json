@@ -1,7 +1,7 @@
 {
   "name": "@mnemosyne-plugins/translator",
   "displayName": "Translator",
-  "version": "1.3.3",
+  "version": "2.0.0",
   "category": "Productivity",
   "keywords": [
     "translation",
@@ -9,13 +9,15 @@
     "traduction",
     "traduire",
     "ocr",
-    "vocabulary"
+    "vocabulary",
+    "benchmark",
+    "web page"
   ],
-  "description": "AI translation workspace: a dashboard with quick-translate and stats, a document pipeline (PDF/DOCX/OCR), an Auto/Local/Cloud engine picker, a searchable history, plus a vocabulary repertoire and spaced-repetition review (beta).",
+  "description": "Translate with the model you pick, loaded the way the chat loads one; compare several models on the same text; documents and web pages translated piece by piece into a report for the chat; your languages one click apart; vocabulary review (beta).",
   "descriptionI18n": {
-    "fr": "Espace de traduction IA : un dashboard avec traduction rapide et statistiques, un pipeline de documents (PDF/DOCX/OCR), un sélecteur de moteur Auto/Local/Cloud, un historique cherchable, plus un répertoire de vocabulaire et une révision à répétition espacée (bêta).",
-    "en": "AI translation workspace: a dashboard with quick-translate and stats, a document pipeline (PDF/DOCX/OCR), an Auto/Local/Cloud engine picker, a searchable history, plus a vocabulary repertoire and spaced-repetition review (beta).",
-    "es": "Espacio de traducción IA: un panel con traducción rápida y estadísticas, un flujo de documentos (PDF/DOCX/OCR), un selector de motor Auto/Local/Cloud, un historial con búsqueda, más un repertorio de vocabulario y repaso de repetición espaciada (beta)."
+    "fr": "Traduire avec le modèle choisi, chargé comme le chat en charge un ; comparer plusieurs modèles sur le même texte ; documents et pages web traduits par morceaux en un rapport pour le chat ; vos langues à un clic ; révision du vocabulaire (bêta).",
+    "en": "Translate with the model you pick, loaded the way the chat loads one; compare several models on the same text; documents and web pages translated piece by piece into a report for the chat; your languages one click apart; vocabulary review (beta).",
+    "es": "Traducir con el modelo elegido, cargado como el chat carga uno; comparar varios modelos sobre el mismo texto; documentos y páginas web traducidos por fragmentos en un informe para el chat; sus idiomas a un clic; repaso de vocabulario (beta)."
   },
   "icon": "icon.svg",
   "repository": "https://github.com/Mnemosyne-OS/mnemosyne_OS-translator",

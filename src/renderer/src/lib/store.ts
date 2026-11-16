@@ -15,24 +15,50 @@ export interface LanguageOption {
   name: string;
 }
 
-/** Supported language pairs — kept in sync with the host translate prompt. */
+/**
+ * Every language the Translator offers, as source or target (any of them can
+ * be a target: « my languages » are only the shortcuts). English names: the
+ * prompt and the vault entries read them; the screen names them with
+ * Intl.DisplayNames in the interface language. Kept equal to
+ * PROMPT_LANG_NAMES and to the far view's FAR_LANGUAGES.
+ */
 export const LANGUAGES: LanguageOption[] = [
   { code: 'en', name: 'English' },
-  { code: 'fr', name: 'French (Français)' },
-  { code: 'es', name: 'Spanish (Español)' },
-  { code: 'de', name: 'German (Deutsch)' },
-  { code: 'it', name: 'Italian (Italiano)' },
-  { code: 'pt', name: 'Portuguese (Português)' },
-  { code: 'ru', name: 'Russian (Русский)' },
-  { code: 'zh', name: 'Chinese (中文)' },
-  { code: 'ja', name: 'Japanese (日本語)' },
-  { code: 'ko', name: 'Korean (한국어)' },
-  { code: 'ar', name: 'Arabic (العربية)' },
-  { code: 'tr', name: 'Turkish (Türkçe)' },
-  { code: 'nl', name: 'Dutch (Nederlands)' },
-  { code: 'pl', name: 'Polish (Polski)' },
-  { code: 'vi', name: 'Vietnamese (Tiếng Việt)' },
-  { code: 'hi', name: 'Hindi (हिन्दी)' },
+  { code: 'fr', name: 'French' },
+  { code: 'es', name: 'Spanish' },
+  { code: 'de', name: 'German' },
+  { code: 'it', name: 'Italian' },
+  { code: 'pt', name: 'Portuguese' },
+  { code: 'nl', name: 'Dutch' },
+  { code: 'pl', name: 'Polish' },
+  { code: 'ru', name: 'Russian' },
+  { code: 'uk', name: 'Ukrainian' },
+  { code: 'cs', name: 'Czech' },
+  { code: 'sk', name: 'Slovak' },
+  { code: 'ro', name: 'Romanian' },
+  { code: 'hu', name: 'Hungarian' },
+  { code: 'bg', name: 'Bulgarian' },
+  { code: 'hr', name: 'Croatian' },
+  { code: 'sr', name: 'Serbian' },
+  { code: 'el', name: 'Greek' },
+  { code: 'sv', name: 'Swedish' },
+  { code: 'da', name: 'Danish' },
+  { code: 'no', name: 'Norwegian' },
+  { code: 'fi', name: 'Finnish' },
+  { code: 'ca', name: 'Catalan' },
+  { code: 'tr', name: 'Turkish' },
+  { code: 'ar', name: 'Arabic' },
+  { code: 'he', name: 'Hebrew' },
+  { code: 'fa', name: 'Persian' },
+  { code: 'hi', name: 'Hindi' },
+  { code: 'bn', name: 'Bengali' },
+  { code: 'id', name: 'Indonesian' },
+  { code: 'ms', name: 'Malay' },
+  { code: 'th', name: 'Thai' },
+  { code: 'vi', name: 'Vietnamese' },
+  { code: 'zh', name: 'Chinese' },
+  { code: 'ja', name: 'Japanese' },
+  { code: 'ko', name: 'Korean' },
 ];
 
 /** English label for a language code (falls back to the code itself). */
